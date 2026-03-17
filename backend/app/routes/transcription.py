@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.schemas import TranscriptionResponse
 from app.database import SessionLocal
-from app.crud import create_transcription, get_all_transcriptions
+from app.crud import create_transcription, get_all_transcriptions, delete_transcription
 from app.utils import (
     generate_unique_filename,
     is_valid_file_type,
@@ -88,3 +88,20 @@ async def generate_transcriptions(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
+@router.delete(
+    "/{id}",
+    tags=["Transcriptions"],
+    responses={
+        200: {"description": "Success"},
+        404: {"description": "Id not found"},
+    },
+)
+def delete_transcription_route(id: int, db: Annotated[Session, Depends(get_db)]):
+    transcription = delete_transcription(db, id)
+
+    if not transcription:
+        raise HTTPException(status_code=404, detail="Id not found")
+
+    return f"Transcription {id} deleted succesffully."
