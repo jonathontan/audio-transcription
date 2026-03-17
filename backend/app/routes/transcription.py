@@ -61,9 +61,15 @@ async def generate_transcriptions(
     file_path = os.path.join("uploads", new_filename)
 
     try:
+        file_size = 0
         async with aiofiles.open(file_path, "wb") as buffer:
             while chunk := await file.read(1024 * 1024):
-                if len(chunk) > MAX_FILE_SIZE:
+                file_size += len(chunk)
+                if file_size > MAX_FILE_SIZE:
+                    await buffer.close()
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+
                     raise HTTPException(
                         status_code=400,
                         detail="File exceeds limit. Maximum size is 1MB",
