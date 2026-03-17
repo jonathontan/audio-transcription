@@ -10,7 +10,8 @@ def get_model():
         print("Loading whisper-tiny model...")
         _model = pipeline(
             task="automatic-speech-recognition",
-            model="openai/whisper-tiny"
+            model="openai/whisper-tiny",
+            language="en",
         )
         print("Model loaded.")
 
@@ -27,7 +28,12 @@ def transcribe_audio(filepath: str) -> str:
     Returns:
         Transcription as a string
     """
-
     model = get_model()
-    transcription = model(filepath)
+    
+    transcription = model(
+        filepath,
+        return_timestamps=True,
+        chunk_length_s=30
+    )
+    
     return transcription["text"]
