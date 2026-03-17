@@ -39,7 +39,7 @@ def get_transcriptions(db: Annotated[Session, Depends(get_db)]):
 
 
 @router.post(
-    "/generate",
+    "/transcribe",
     tags=["Transcriptions"],
     response_model=TranscriptionResponse,
     responses={
