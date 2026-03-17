@@ -1,3 +1,4 @@
+import os
 from sqlalchemy.orm import Session
 from .models import Transcription
 
@@ -20,6 +21,12 @@ def delete_transcription(db: Session, id: int):
 
     if not result:
         return None
+    
+    if result.filepath and os.path.exists(result.filename):
+        try:
+            os.remove(result.filepath)
+        except Exception:
+            print(f"Error deleting {result.filename}.")
 
     db.delete(result)
     db.commit()
