@@ -7,3 +7,4 @@ torch
 librosa
 soundfile
 pydantic
+aiofiles
