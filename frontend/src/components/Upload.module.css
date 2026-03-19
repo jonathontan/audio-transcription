@@ -28,6 +28,12 @@
     cursor: pointer;
 }
 
+.disabled {
+    pointer-events: none;
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
 .title {
     font-weight: bold;
 }

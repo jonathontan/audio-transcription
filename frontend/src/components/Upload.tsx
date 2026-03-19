@@ -1,13 +1,25 @@
 import { Icon } from "@iconify/react";
 import { Button, Fade, IconButton } from "@mui/material";
-import { useRef, useState, type ChangeEvent, type DragEvent } from "react";
+import {
+  useRef,
+  useState,
+  type ChangeEvent,
+  type Dispatch,
+  type DragEvent,
+  type SetStateAction,
+} from "react";
 import colors from "../styles/colors";
 import { MAX_FILES_LIMIT } from "../util/constant";
 import styles from "./Upload.module.css";
 
-function Upload() {
-  const [files, setFiles] = useState<File[]>([]);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+interface Props {
+  files: File[];
+  setFiles: Dispatch<SetStateAction<File[]>>;
+  isUploading: boolean;
+  onUpload: () => void;
+}
+
+function Upload({ files, setFiles, isUploading, onUpload }: Readonly<Props>) {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -39,12 +51,12 @@ function Upload() {
     e.preventDefault();
   };
 
-  const checkFilesLimit = () => {
+  const exceedFilesLimit = () => {
     if (files.length > MAX_FILES_LIMIT) {
       alert(`You have exceeded the upload limit of ${MAX_FILES_LIMIT} files.`);
-      return false;
+      return true;
     }
-    return true;
+    return false;
   };
 
   const handleDelete = (fileIndex: number) => {
@@ -52,15 +64,19 @@ function Upload() {
   };
 
   const handleSubmit = () => {
-    if (!checkFilesLimit()) return;
+    if (exceedFilesLimit()) return;
 
-    console.log("submit");
+    onUpload();
   };
 
   return (
     <div className={styles.container}>
       <div
-        className={`${styles.uploadContainer} ${isDragging ? styles.isDragging : ""} ${isMouseOver ? styles.isMouseOver : ""}`}
+        className={`
+          ${styles.uploadContainer} 
+          ${isDragging ? styles.isDragging : ""} 
+          ${isMouseOver ? styles.isMouseOver : ""}
+          ${isUploading ? styles.disabled : ""}`}
         onClick={handleClick}
         onDrop={(e) => {
           handleDrop(e);
@@ -77,10 +93,11 @@ function Upload() {
           Drag and drop files or click to select
         </div>
         <div className={styles.description}>
-          MP3, WAV, M4A, FLAC, OGG (Max. 2MB)
+          MP3, WAV, M4A, FLAC, OGG (Max. 1 MB)
         </div>
         <input
           ref={inputRef}
+          disabled={isUploading}
           hidden
           multiple
           type="file"
@@ -93,8 +110,14 @@ function Upload() {
           <Fade in timeout={800} key={`${file.name}-${i}`}>
             <div className={styles.card}>
               <span className={styles.filename}>{file.name}</span>
-              <IconButton onClick={() => handleDelete(i)}>
-                <Icon icon="material-symbols:close-rounded" color="red" />
+              <IconButton
+                onClick={() => handleDelete(i)}
+                disabled={isUploading}
+                sx={{
+                  color: "red",
+                }}
+              >
+                <Icon icon="material-symbols:close-rounded" />
               </IconButton>
             </div>
           </Fade>
@@ -107,6 +130,8 @@ function Upload() {
             size="medium"
             variant="outlined"
             onClick={handleSubmit}
+            loading={isUploading}
+            loadingIndicator={<Icon icon="eos-icons:loading" fontSize={24} />}
             sx={{
               width: "auto",
               textTransform: "capitalize",
