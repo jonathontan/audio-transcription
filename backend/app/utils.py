@@ -11,7 +11,7 @@ ALLOWED_MIME_TYPES = {
     "audio/ogg",
     "audio/flac"
 }
-MAX_FILE_SIZE = 2 * 1024 * 1024
+MAX_FILE_SIZE = 1 * 1024 * 1024
 
 def generate_unique_filename(directory: str, filename: str) -> str:
     stem, ext = os.path.splitext(filename)
