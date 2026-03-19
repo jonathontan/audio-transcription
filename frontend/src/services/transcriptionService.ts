@@ -1,0 +1,22 @@
+const baseUrl = import.meta.env.VITE_BACKEND_SERVICE;
+
+export default async function upload(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const relativeUrl = "/transcribe";
+  const requestUrl = baseUrl + relativeUrl;
+
+  const response = await fetch(requestUrl, {
+    method: "POST",
+    body: formData,
+
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.detail);
+  }
+
+  return response.json()
+}
