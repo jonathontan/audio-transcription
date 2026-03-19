@@ -1,9 +1,10 @@
 import { useState } from "react";
+import Connection from "../components/Connection";
 import NavigationTab from "../components/NavigationTab";
 import Upload from "../components/Upload";
-import styles from "./MainPage.module.css";
-import uploadFile from "../services/transcriptionService";
 import { type Transcription } from "../interfaces/transcription";
+import uploadFile from "../services/transcriptionService";
+import styles from "./MainPage.module.css";
 
 function MainPage() {
   const [tabIndex, setTabIndex] = useState<number>(0);
@@ -48,6 +49,7 @@ function MainPage() {
   return (
     <div className={styles.container}>
       <h1>Audio Transcription</h1>
+      <Connection />
       <div className={styles.tabNavigation}>
         <NavigationTab tabIndex={tabIndex} onChange={setTabIndex} />
       </div>
