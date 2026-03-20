@@ -1,15 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Connection from "../components/Connection";
 import NavigationTab from "../components/NavigationTab";
+import TranscriptionTable from "../components/TranscriptionTable";
 import Upload from "../components/Upload";
 import { type Transcription } from "../interfaces/transcription";
-import transcribe from "../services/transcriptionService";
+import {
+  getTranscriptions,
+  transcribe,
+} from "../services/transcriptionService";
 import styles from "./MainPage.module.css";
 
 function MainPage() {
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [files, setFiles] = useState<File[]>([]);
+  const [transcriptions, setTranscriptions] = useState<Transcription[]>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setTimeout(() => fetchTranscriptions(), 2000);
+  }, []);
+
+  const fetchTranscriptions = async () => {
+    try {
+      const response = await getTranscriptions();
+      setTranscriptions(response);
+    } catch (e: unknown) {
+      if (e instanceof Error) throw new Error(e.message);
+    }
+  };
 
   const handleUpload = async () => {
     setIsUploading(true);
@@ -28,13 +46,16 @@ function MainPage() {
           });
         }
       }
-      if (success.length > 0)
-        success.map((res) =>
+
+      if (success.length > 0) {
+        fetchTranscriptions();
+        success.forEach((res) =>
           alert(`Successfully transcribed ${res.data.filename}.`),
         );
+      }
 
       if (error.length > 0) {
-        error.map((err) =>
+        error.forEach((err) =>
           alert(`
           Error uploading ${err.file.name}
           Reason: ${err.reason}`),
@@ -61,6 +82,9 @@ function MainPage() {
             isUploading={isUploading}
             onUpload={handleUpload}
           />
+        )}
+        {tabIndex === 1 && (
+          <TranscriptionTable transcriptions={transcriptions} />
         )}
       </div>
     </div>

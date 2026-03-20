@@ -1,0 +1,15 @@
+.accordion {
+
+  .details {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    .iconText {
+      display: inherit;
+      gap: 5px;
+      align-items: center;
+      opacity: 0.5;
+    }
+  }
+}
