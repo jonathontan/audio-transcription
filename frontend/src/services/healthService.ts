@@ -13,5 +13,5 @@ export default async function getHealth() {
     throw new Error(error);
   }
 
-  return response.json()
+  return response.json();
 }
