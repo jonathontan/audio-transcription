@@ -1,6 +1,6 @@
 const baseUrl = import.meta.env.VITE_BACKEND_SERVICE;
 
-export default async function upload(file: File) {
+export default async function transcribe(file: File) {
   const formData = new FormData();
   formData.append("file", file);
 

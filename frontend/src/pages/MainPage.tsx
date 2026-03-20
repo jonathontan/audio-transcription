@@ -3,7 +3,7 @@ import Connection from "../components/Connection";
 import NavigationTab from "../components/NavigationTab";
 import Upload from "../components/Upload";
 import { type Transcription } from "../interfaces/transcription";
-import uploadFile from "../services/transcriptionService";
+import transcribe from "../services/transcriptionService";
 import styles from "./MainPage.module.css";
 
 function MainPage() {
@@ -19,7 +19,7 @@ function MainPage() {
     try {
       for (const file of files) {
         try {
-          const response = await uploadFile(file);
+          const response = await transcribe(file);
           success.push({ data: response, file });
         } catch (err: unknown) {
           error.push({
