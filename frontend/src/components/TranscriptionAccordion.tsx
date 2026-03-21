@@ -29,7 +29,7 @@ function TranscriptionAccordion({ transcription, expanded }: Readonly<Props>) {
           </div>
           <div className={styles.iconText}>
             <Icon icon="mingcute:time-line" />
-            {new Date(transcription.created_at).toLocaleTimeString()}
+            {new Date(transcription.created_at+"Z").toLocaleTimeString("en-SG")}
           </div>
         </div>
       </AccordionSummary>
