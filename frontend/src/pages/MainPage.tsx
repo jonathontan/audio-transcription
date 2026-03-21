@@ -14,6 +14,9 @@ function MainPage() {
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [files, setFiles] = useState<File[]>([]);
   const [transcriptions, setTranscriptions] = useState<Transcription[]>([]);
+  const [initialTranscriptions, setInitialTranscriptions] = useState<
+    Transcription[]
+  >([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -24,6 +27,7 @@ function MainPage() {
     try {
       const response = await getTranscriptions();
       setTranscriptions(response);
+      setInitialTranscriptions(response);
     } catch (e: unknown) {
       if (e instanceof Error) throw new Error(e.message);
     }
@@ -84,7 +88,11 @@ function MainPage() {
           />
         )}
         {tabIndex === 1 && (
-          <TranscriptionTable transcriptions={transcriptions} />
+          <TranscriptionTable
+            transcriptions={transcriptions}
+            initialTranscriptions={initialTranscriptions}
+            setTranscriptions={setTranscriptions}
+          />
         )}
       </div>
     </div>

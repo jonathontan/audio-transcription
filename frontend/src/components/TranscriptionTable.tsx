@@ -1,4 +1,4 @@
-import { Accordion, Pagination, Stack } from "@mui/material";
+import { Accordion, IconButton, Pagination, Stack } from "@mui/material";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -9,16 +9,33 @@ import {
   type RowSelectionState,
   type SortingState,
 } from "@tanstack/react-table";
-import { useMemo, useState, type SyntheticEvent } from "react";
+import {
+  useMemo,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+  type SyntheticEvent,
+} from "react";
 import type { Transcription } from "../interfaces/transcription";
-import TranscriptionAccordion from "./TranscriptionAccordion";
+import searchTranscriptions from "../services/searchService";
 import colors from "../styles/colors";
+import SearchInput from "./SearchInput";
+import TranscriptionAccordion from "./TranscriptionAccordion";
+import { Icon } from "@iconify/react";
 
 interface Props {
   transcriptions: Transcription[];
+  initialTranscriptions: Transcription[];
+  setTranscriptions: Dispatch<SetStateAction<Transcription[]>>;
 }
 
-function TranscriptionTable({ transcriptions }: Readonly<Props>) {
+function TranscriptionTable({
+  transcriptions,
+  initialTranscriptions,
+  setTranscriptions,
+}: Readonly<Props>) {
+  const [isSearch, setIsSearch] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [expanded, setExpanded] = useState<string | false>("panel0");
@@ -64,13 +81,39 @@ function TranscriptionTable({ transcriptions }: Readonly<Props>) {
       setExpanded(newExpanded ? panel : false);
     };
 
+  const handleSearch = async () => {
+    setIsSearch(true);
+
+    try {
+      const response = await searchTranscriptions(searchText);
+      setTranscriptions(response);
+    } catch (e: unknown) {
+      if (e instanceof Error) throw new Error(e.message);
+    }
+  };
+
+  const handleClearSearchResults = () => {
+    setTranscriptions(initialTranscriptions);
+    setIsSearch(false);
+  }
+
   return (
-    <Stack height={"100%"}>
+    <Stack height={"100%"} gap={1}>
+      <SearchInput searchText={searchText} setSearchText={setSearchText} onSearch={handleSearch} />
+      {isSearch && (
+        <div>
+          <span>{transcriptions.length} search results for "{searchText}"</span>
+          <IconButton onClick={handleClearSearchResults}>
+            <Icon icon="ic:baseline-clear" fontSize={14} />
+          </IconButton>
+        </div>
+        
+      )}
       {rows.length === 0 ? (
-        <>No transcription found</>
+        <>No transcription found.</>
       ) : (
         <>
-          <div style={{ flex: 1, overflow: "auto" }}>
+          <div style={{ flex: 1, overflow: "auto", padding: 1 }}>
             {rows.map((row, index) => (
               <Accordion
                 key={row.original.id}
@@ -84,8 +127,8 @@ function TranscriptionTable({ transcriptions }: Readonly<Props>) {
                   ":first-of-type": { borderRadius: "15px" },
                   ":last-of-type": { borderRadius: "15px" },
                   "&.MuiAccordion-root::before": {
-                    display: "none"
-                  }
+                    display: "none",
+                  },
                 }}
               >
                 <TranscriptionAccordion
@@ -100,9 +143,9 @@ function TranscriptionTable({ transcriptions }: Readonly<Props>) {
             page={pagination.pageIndex + 1}
             count={pageCount}
             onChange={(_, page) => table.setPageIndex(page - 1)}
-            shape="rounded"
-            sx={{ mt: 1 }}
-            color="primary"
+            sx={{ mt: 1, ml: "auto", mr: "auto" }}
+            color="secondary"
+            variant="outlined"
           ></Pagination>
         </>
       )}
