@@ -21,4 +21,4 @@ services:
       - "3000:80"
     depends_on:
       - backend
-    restartL unless-stopped
+    restart: unless-stopped
