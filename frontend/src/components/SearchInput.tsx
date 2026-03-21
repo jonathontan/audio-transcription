@@ -13,8 +13,8 @@ function SearchInput({ onSearch, searchText, setSearchText }: Readonly<Props>) {
   const [text, setText] = useState<string>(searchText);
 
   const handleClick = () => {
-    onSearch()
-    setText("")
+    onSearch();
+    setText("");
   };
 
   return (
@@ -26,8 +26,8 @@ function SearchInput({ onSearch, searchText, setSearchText }: Readonly<Props>) {
       value={text}
       placeholder="Search..."
       onChange={(e) => {
-        setText(e.target.value.trim())
-        setSearchText(e.target.value.trim())
+        setText(e.target.value.trim());
+        setSearchText(e.target.value.trim());
       }}
       sx={{
         border: "1px solid",

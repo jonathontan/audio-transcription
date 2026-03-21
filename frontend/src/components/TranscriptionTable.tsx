@@ -36,6 +36,7 @@ function TranscriptionTable({
 }: Readonly<Props>) {
   const [isSearch, setIsSearch] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
+  const [searchedText, setSearchedText] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [expanded, setExpanded] = useState<string | false>("panel0");
@@ -83,6 +84,7 @@ function TranscriptionTable({
 
   const handleSearch = async () => {
     setIsSearch(true);
+    setSearchedText(searchText);
 
     try {
       const response = await searchTranscriptions(searchText);
@@ -95,6 +97,8 @@ function TranscriptionTable({
   const handleClearSearchResults = () => {
     setTranscriptions(initialTranscriptions);
     setIsSearch(false);
+    setSearchText("")
+    setSearchedText("")
   }
 
   return (
@@ -102,7 +106,7 @@ function TranscriptionTable({
       <SearchInput searchText={searchText} setSearchText={setSearchText} onSearch={handleSearch} />
       {isSearch && (
         <div>
-          <span>{transcriptions.length} search results for "{searchText}"</span>
+          <span>{transcriptions.length} search results for "{searchedText}"</span>
           <IconButton onClick={handleClearSearchResults}>
             <Icon icon="ic:baseline-clear" fontSize={14} />
           </IconButton>
