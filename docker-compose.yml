@@ -13,3 +13,12 @@ services:
     environment:
       - DATABASE_URL=sqlite:///./data/transcriptions.db
     restart: unless-stopped
+  frontend:
+    build:
+      context: ./frontend
+    container_name: transcription-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restartL unless-stopped
