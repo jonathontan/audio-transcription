@@ -105,4 +105,4 @@ def delete_transcription_route(id: int, db: Annotated[Session, Depends(get_db)])
     if not transcription:
         raise HTTPException(status_code=404, detail="Id not found")
 
-    return f"Transcription {id} deleted succesffully."
+    return "Transcription successfully deleted"
