@@ -85,7 +85,8 @@ async def generate_transcriptions(
         )
 
         return data
-
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
