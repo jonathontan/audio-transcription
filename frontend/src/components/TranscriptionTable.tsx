@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { Accordion, IconButton, Pagination, Stack } from "@mui/material";
 import {
   createColumnHelper,
@@ -18,21 +19,23 @@ import {
 } from "react";
 import type { Transcription } from "../interfaces/transcription";
 import searchTranscriptions from "../services/searchService";
+import { deleteTranscription } from "../services/transcriptionService";
 import colors from "../styles/colors";
 import SearchInput from "./SearchInput";
 import TranscriptionAccordion from "./TranscriptionAccordion";
-import { Icon } from "@iconify/react";
 
 interface Props {
   transcriptions: Transcription[];
   initialTranscriptions: Transcription[];
   setTranscriptions: Dispatch<SetStateAction<Transcription[]>>;
+  setInitialTranscriptions: Dispatch<SetStateAction<Transcription[]>>;
 }
 
 function TranscriptionTable({
   transcriptions,
   initialTranscriptions,
   setTranscriptions,
+  setInitialTranscriptions,
 }: Readonly<Props>) {
   const [isSearch, setIsSearch] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
@@ -97,21 +100,40 @@ function TranscriptionTable({
   const handleClearSearchResults = () => {
     setTranscriptions(initialTranscriptions);
     setIsSearch(false);
-    setSearchText("")
-    setSearchedText("")
-  }
+    setSearchText("");
+    setSearchedText("");
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await deleteTranscription(id);
+      alert(response);
+      const updatedTranscriptions = initialTranscriptions.filter(
+        (transcription) => transcription.id !== id,
+      );
+      setTranscriptions(updatedTranscriptions);
+      setInitialTranscriptions(updatedTranscriptions);
+    } catch (e: unknown) {
+      if (e instanceof Error) throw new Error(e.message);
+    }
+  };
 
   return (
     <Stack height={"100%"} gap={1}>
-      <SearchInput searchText={searchText} setSearchText={setSearchText} onSearch={handleSearch} />
+      <SearchInput
+        searchText={searchText}
+        setSearchText={setSearchText}
+        onSearch={handleSearch}
+      />
       {isSearch && (
         <div>
-          <span>{transcriptions.length} search results for "{searchedText}"</span>
+          <span>
+            {transcriptions.length} search results for "{searchedText}"
+          </span>
           <IconButton onClick={handleClearSearchResults}>
             <Icon icon="ic:baseline-clear" fontSize={14} />
           </IconButton>
         </div>
-        
       )}
       {rows.length === 0 ? (
         <>No transcription found.</>
@@ -138,6 +160,7 @@ function TranscriptionTable({
                 <TranscriptionAccordion
                   key={row.original.id}
                   transcription={row.original}
+                  onDelete={handleDelete}
                   expanded={expanded === "panel" + index}
                 />
               </Accordion>

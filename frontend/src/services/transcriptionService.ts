@@ -35,3 +35,19 @@ export async function getTranscriptions() {
 
   return response.json();
 }
+
+export async function deleteTranscription(id: number) {
+  const relativeUrl = `/${id}`;
+  const requestUrl = baseUrl + relativeUrl;
+
+  const response = await fetch(requestUrl, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error);
+  }
+
+  return response.json();
+}

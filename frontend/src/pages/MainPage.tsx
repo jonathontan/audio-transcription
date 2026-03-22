@@ -92,6 +92,7 @@ function MainPage() {
             transcriptions={transcriptions}
             initialTranscriptions={initialTranscriptions}
             setTranscriptions={setTranscriptions}
+            setInitialTranscriptions={setInitialTranscriptions}
           />
         )}
       </div>
