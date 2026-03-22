@@ -22,8 +22,8 @@ pip install -r requirements.txt
 ``` bash
 python -m uvicorn app.main:app --reload
 ```
-Server: http://localhost:8000
-API: http://localhost:8000/swagger
+- Server: http://localhost:8000
+- API: http://localhost:8000/swagger
 
 ### Run test
 ``` bash
