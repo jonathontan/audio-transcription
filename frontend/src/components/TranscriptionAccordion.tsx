@@ -11,7 +11,7 @@ import {
   IconButton,
   Stack,
 } from "@mui/material";
-import { useState, type MouseEvent } from "react";
+import { useState } from "react";
 import type { Transcription } from "../interfaces/transcription";
 import colors from "../styles/colors";
 import styles from "./TranscriptionAccordion.module.css";
