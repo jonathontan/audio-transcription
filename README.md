@@ -24,6 +24,12 @@ An application for uploading audio files and generating transcriptions using Whi
 - [Docker](https://www.docker.com/products/docker-desktop/) (recommended)
 
 ## Getting started
+### Clone the repository
+``` bash
+git clone https://github.com/jonathontan/audio-transcription.git
+cd audio-transcription
+```
+
 ### Install FFmeg
 ```
 sudo apt update
