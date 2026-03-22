@@ -27,7 +27,6 @@ function Upload({ files, setFiles, isUploading, onUpload }: Readonly<Props>) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (!fileList) return;
-    console.log(fileList);
     const fileArray = Array.from(fileList);
     setFiles((prev) => [...prev, ...fileArray]);
   };
