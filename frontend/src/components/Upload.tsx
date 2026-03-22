@@ -96,6 +96,7 @@ function Upload({ files, setFiles, isUploading, onUpload }: Readonly<Props>) {
           MP3, WAV, M4A, FLAC, OGG (Max. 1 MB)
         </div>
         <input
+          aria-label="file upload"
           ref={inputRef}
           disabled={isUploading}
           hidden
