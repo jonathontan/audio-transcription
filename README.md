@@ -43,9 +43,13 @@ VITE_BACKEND_SERVICE=http://localhost:8000
 ```
 
 ### Build and run using Docker
-
 ```bash
 docker-compose up --build -d
+```
+
+### Stop docker containers
+``` bash
+docker compose down
 ```
 
 ## Services
