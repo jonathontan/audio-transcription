@@ -5,6 +5,7 @@ backend/*.py[cod]
 backend/*.db
 backend/uploads/
 backend/.env
+backend/data
 
 frontend/node_modules/
 frontend/dist/
